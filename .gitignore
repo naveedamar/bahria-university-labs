@@ -35,3 +35,6 @@ data-structures-and-algorithms/final/finals.cpp
 artificial-intelligence/lab-8/.env
 artificial-intelligence/leaf-scan/plant_disease_model.keras
 .idea/Bahria-University-Labs.iml.devcontainer/
+
+.venv*
+venv*
