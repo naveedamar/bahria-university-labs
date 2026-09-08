@@ -1,0 +1,9 @@
+student_id,name,age,gender,department,semester,gpa,attendance_percentage
+101,Ali,20,Male,Computer Science,4,3.5,85
+102,Sara,21,Female,Computer Science,4,3.8,92
+103,Ahmed,19,Male,Software Engineering,2,3.2,78
+104,Ayesha,22,Female,Information Technology,6,3.9,95
+105,Hassan,20,Male,Computer Science,4,2.8,70
+106,Fatima,21,Female,Software Engineering,4,3.6,88
+107,Usman,23,Male,Information Technology,8,3.1,75
+108,Zainab,20,Female,Computer Science,2,3.7,90

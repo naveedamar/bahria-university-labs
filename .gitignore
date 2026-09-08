@@ -38,3 +38,5 @@ artificial-intelligence/leaf-scan/plant_disease_model.keras
 
 .venv*
 venv*
+/machine-learning/data/rentals.csv
+/machine-learning/data/.complete/datasets/sergionefedov/dubai-real-estate-sales-and-rentals-20202026/2/rentals.csv.complete
