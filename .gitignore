@@ -38,10 +38,10 @@ artificial-intelligence/leaf-scan/plant_disease_model.keras
 
 .venv*
 venv*
-/machine-learning/data/rentals.csv
-/machine-learning/data/.complete/datasets/sergionefedov/dubai-real-estate-sales-and-rentals-20202026/2/rentals.csv.complete
-/machine-learning/data/Building_Permits.csv
-/machine-learning/data/Crime_Data_from_2020_to_Present.csv
-/machine-learning/data/hospital data analysis.csv
-/machine-learning/data/.complete/
-/machine-learning/data/North America Restaurants.csv
+/datasets/rentals.csv
+/datasets/.complete/datasets/sergionefedov/dubai-real-estate-sales-and-rentals-20202026/2/rentals.csv.complete
+/datasets/Building_Permits.csv
+/datasets/Crime_Data_from_2020_to_Present.csv
+/datasets/hospital data analysis.csv
+/datasets/.complete/
+/datasets/North America Restaurants.csv
