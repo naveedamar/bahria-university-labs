@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+  <h2 class="fw-bold">Manager Dashboard</h2>
+  <p class="text-muted">Manage items and view complete order history.</p>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-0 rounded-3">
+      <div class="card-header bg-white py-3">
+        <h5 class="fw-bold mb-0">Add New Menu Item</h5>
+      </div>
+      <div class="card-body">
+        <form action="{{ url_for('add_menu_item') }}" method="POST">
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Category</label>
+            <select name="category" class="form-select" required>
+              <option value="Meals">Meals</option>
+              <option value="Snacks">Snacks</option>
+              <option value="Beverages">Beverages</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Price (PKR)</label>
+            <input type="number" step="0.5" name="price" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label small fw-semibold">Description</label>
+            <textarea name="description" class="form-control" rows="2" required></textarea>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="available" id="avail" checked>
+            <label class="form-check-label" for="avail">Available immediately</label>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Save Item</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card shadow-sm border-0 rounded-3 mb-4">
+      <div class="card-header bg-white py-3">
+        <h5 class="fw-bold mb-0">Active Menu Items</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th class="text-end pe-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td class="fw-semibold">{{ item.name }}</td>
+              <td><span class="badge bg-light text-dark border">{{ item.category }}</span></td>
+              <td>Rs. {{ "%.2f"|format(item.price) }}</td>
+              <td>
+                {% if item.is_available %}
+                  <span class="badge bg-success">Available</span>
+                {% else %}
+                  <span class="badge bg-danger">Unavailable</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-3">
+                <form action="{{ url_for('delete_menu_item', item_id=item.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this item?');">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3">
+      <div class="card-header bg-white py-3">
+        <h5 class="fw-bold mb-0">All System Orders</h5>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Order Ref</th>
+              <th>Student</th>
+              <th>Pickup Window</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for o in orders %}
+            <tr>
+              <td class="fw-bold">{{ o.order_number }}</td>
+              <td>{{ o.user.username }}</td>
+              <td>{{ o.pickup_time }}</td>
+              <td class="fw-semibold">Rs. {{ "%.2f"|format(o.total) }}</td>
+              <td>
+                {% if o.status == 'Completed' %}
+                  <span class="badge bg-secondary">{{ o.status }}</span>
+                {% elif o.status == 'Ready' %}
+                  <span class="badge bg-success">{{ o.status }}</span>
+                {% elif o.status == 'Preparing' %}
+                  <span class="badge bg-primary">{{ o.status }}</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark">{{ o.status }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">No orders placed yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <h3 class="fw-bold mb-3">Active Order Queue</h3>
+    {% for order in orders %}
+    <div class="card shadow-sm border-0 rounded-3 mb-3 border-start border-4 {% if order.status == 'Ready' %}border-success{% elif order.status == 'Preparing' %}border-primary{% else %}border-warning{% endif %}">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">{{ order.order_number }} ({{ order.user.username }})</h5>
+          <span class="badge bg-dark">{{ order.pickup_time }}</span>
+        </div>
+        <ul class="my-3">
+          {% for item in order.items %}
+          <li><strong>{{ item.quantity }}x</strong> {{ item.menu_item.name }}</li>
+          {% endfor %}
+        </ul>
+        <div class="d-flex gap-2">
+          <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+            <input type="hidden" name="status" value="Preparing">
+            <button class="btn btn-sm btn-primary" {% if order.status == 'Preparing' %}disabled{% endif %}>Mark Preparing</button>
+          </form>
+          <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+            <input type="hidden" name="status" value="Ready">
+            <button class="btn btn-sm btn-success" {% if order.status == 'Ready' %}disabled{% endif %}>Mark Ready</button>
+          </form>
+          <form action="{{ url_for('update_order_status', order_id=order.id) }}" method="POST">
+            <input type="hidden" name="status" value="Completed">
+            <button class="btn btn-sm btn-secondary">Complete Order</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No pending orders in the kitchen queue.</div>
+    {% endfor %}
+  </div>
+
+  <div class="col-lg-4">
+    <h3 class="fw-bold mb-3">Kitchen Availability</h3>
+    <ul class="list-group shadow-sm">
+      {% for item in menu_items %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>{{ item.name }}</span>
+        <form action="{{ url_for('toggle_item_availability', item_id=item.id) }}" method="POST">
+          <button class="btn btn-sm {% if item.is_available %}btn-outline-success{% else %}btn-outline-danger{% endif %}">
+            {{ "Available" if item.is_available else "Unavailable" }}
+          </button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
