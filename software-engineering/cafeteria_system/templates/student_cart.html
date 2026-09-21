@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Your Order Cart{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+  <div class="col-md-8">
+    <h2 class="fw-bold mb-1"><i class="bi bi-bag-check text-primary me-2"></i>Review Your Cart</h2>
+    <p class="text-muted mb-0">Check your pre-order items, pick your campus pickup slot, and finalize your order.</p>
+  </div>
+  <div class="col-md-4 text-md-end mt-3 mt-md-0">
+    <a href="{{ url_for('student_menu') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i> Continue Browsing
+    </a>
+  </div>
+</div>
+
+{% if cart_items %}
+  <div class="row g-4">
+    <!-- Cart Items Table -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header py-3 border-bottom border-secondary border-opacity-25">
+          <h5 class="mb-0 fw-bold">Selected Items ({{ cart_items|length }})</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr class="border-bottom border-secondary border-opacity-25">
+                <th scope="col" style="width: 40%;">Item</th>
+                <th scope="col" class="text-center">Price</th>
+                <th scope="col" class="text-center" style="width: 25%;">Quantity</th>
+                <th scope="col" class="text-end">Subtotal</th>
+                <th scope="col" class="text-center" style="width: 10%;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for entry in cart_items %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      {% if entry.item.image_url %}
+                        <img src="{{ entry.item.image_url }}" alt="{{ entry.item.name }}" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                      {% else %}
+                        <div class="rounded bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center text-secondary border border-secondary border-opacity-25" style="width: 50px; height: 50px;">
+                          <i class="bi bi-egg fs-5"></i>
+                        </div>
+                      {% endif %}
+                      <div>
+                        <span class="fw-bold d-block text-light">{{ entry.item.name }}</span>
+                        <span class="badge bg-secondary-subtle text-secondary small">{{ entry.item.category }}</span>
+                        {% if not entry.item.available %}
+                          <span class="badge bg-danger ms-1">Sold Out</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-center text-muted">
+                    Rs. {{ "%.2f"|format(entry.item.price) }}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center justify-content-center gap-2">
+                      <!-- Decrease button -->
+                      <form method="POST" action="{{ url_for('student_cart_update', item_id=entry.item.id) }}" class="d-inline">
+                        <input type="hidden" name="action" value="decrease">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary px-2 py-0 text-light" title="Decrease">
+                          <i class="bi bi-dash"></i>
+                        </button>
+                      </form>
+
+                      <span class="fw-bold px-2 text-light">{{ entry.quantity }}</span>
+
+                      <!-- Increase button -->
+                      <form method="POST" action="{{ url_for('student_cart_update', item_id=entry.item.id) }}" class="d-inline">
+                        <input type="hidden" name="action" value="increase">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary px-2 py-0 text-light" title="Increase">
+                          <i class="bi bi-plus"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                  <td class="text-end fw-bold text-light">
+                    Rs. {{ "%.2f"|format(entry.subtotal) }}
+                  </td>
+                  <td class="text-center">
+                    <form method="POST" action="{{ url_for('student_cart_update', item_id=entry.item.id) }}">
+                      <input type="hidden" name="action" value="remove">
+                      <button type="submit" class="btn btn-sm btn-link text-danger p-0" title="Remove item">
+                        <i class="bi bi-trash3-fill fs-5"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checkout & Order Summary -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header py-3 border-bottom border-secondary border-opacity-25">
+          <h5 class="mb-0 fw-bold">Order Summary</h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between mb-2 text-muted">
+            <span>Items Subtotal</span>
+            <span>Rs. {{ "%.2f"|format(total_amount) }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2 text-muted">
+            <span>Bahria Bites Service Fee</span>
+            <span class="text-success fw-semibold">Free (Campus Subsidy)</span>
+          </div>
+          <hr class="border-secondary border-opacity-25">
+          <div class="d-flex justify-content-between mb-4 align-items-center">
+            <span class="h5 fw-bold mb-0 text-light">Total Due</span>
+            <span class="h4 fw-bold text-primary mb-0">Rs. {{ "%.2f"|format(total_amount) }}</span>
+          </div>
+
+          <!-- Checkout Form -->
+          <form method="POST" action="{{ url_for('student_checkout') }}" id="checkoutForm">
+            <!-- Pickup Slot -->
+            <div class="mb-3">
+              <label for="pickup_time" class="form-label fw-semibold text-light">
+                <i class="bi bi-clock me-1 text-primary"></i> Select Pickup Slot
+              </label>
+              <select class="form-select" id="pickup_time" name="pickup_time" required>
+                <option value="" disabled selected>-- Choose your pickup time --</option>
+                {% for slot in time_slots %}
+                  <option value="{{ slot }}">{{ slot }} (Today)</option>
+                {% endfor %}
+              </select>
+              <div class="form-text text-muted">Your food will be prepared fresh and ready at the counter.</div>
+            </div>
+
+            <!-- Consolidated Payment Method Selection (2 options) -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold text-light">
+                <i class="bi bi-wallet2 me-1 text-primary"></i> Payment Method
+              </label>
+              <div class="d-flex flex-column gap-2">
+                <div class="form-check p-2 rounded border border-secondary border-opacity-25" style="background-color: var(--bb-bg-elevated, #252525);">
+                  <input class="form-check-input ms-1 me-2" type="radio" name="payment_method" id="pay_cash" value="Cash" checked onchange="handlePaymentChange(this.value)">
+                  <label class="form-check-label text-light fw-medium w-100" for="pay_cash">
+                    <i class="bi bi-cash-coin text-warning me-1"></i> Cash (pay at pickup)
+                  </label>
+                </div>
+                <div class="form-check p-2 rounded border border-secondary border-opacity-25" style="background-color: var(--bb-bg-elevated, #252525);">
+                  <input class="form-check-input ms-1 me-2" type="radio" name="payment_method" id="pay_digital" value="Digital Wallet" onchange="handlePaymentChange(this.value)">
+                  <label class="form-check-label text-light fw-medium w-100" for="pay_digital">
+                    <i class="bi bi-qr-code text-info me-1"></i> Digital Wallet (pay via QR at counter)
+                  </label>
+                </div>
+              </div>
+
+              <!-- Digital Wallet instruction notice -->
+              <div id="digitalPaymentNotice" class="alert alert-info border border-info border-opacity-25 py-2 px-3 small mt-2 d-none">
+                <i class="bi bi-info-circle-fill me-1 text-info"></i>
+                <span id="digitalNoticeText">Please scan the QR code at the cafeteria counter to complete payment via your digital wallet before or at pickup.</span>
+              </div>
+            </div>
+
+            <button type="submit" id="btnSubmitOrder" class="btn btn-success w-100 py-2 fw-bold shadow-sm">
+              <i class="bi bi-check2-circle me-1"></i> Place Order (Pay Cash at Pickup)
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="alert alert-info border border-info border-opacity-25 shadow-sm small">
+        <i class="bi bi-info-circle-fill me-1"></i>
+        <strong>Campus Dining Note:</strong> Present your order number at the designated pickup counter when you arrive.
+      </div>
+    </div>
+  </div>
+{% else %}
+  <!-- Empty Cart State -->
+  <div class="card border-0 shadow-sm text-center py-5">
+    <div class="card-body">
+      <div class="bg-secondary bg-opacity-25 text-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+        <i class="bi bi-cart-x fs-1"></i>
+      </div>
+      <h4 class="fw-bold text-light">Your cart is currently empty</h4>
+      <p class="text-muted mb-4">Discover tasty meals, snacks, and drinks prepared fresh every day on campus.</p>
+      <a href="{{ url_for('student_menu') }}" class="btn btn-primary px-4 py-2">
+        <i class="bi bi-grid-fill me-1"></i> Browse Bahria Bites Menu
+      </a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function handlePaymentChange(method) {
+  const noticeBox = document.getElementById('digitalPaymentNotice');
+  const submitBtn = document.getElementById('btnSubmitOrder');
+
+  if (method === 'Cash') {
+    noticeBox.classList.add('d-none');
+    submitBtn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Place Order (Pay Cash at Pickup)';
+    submitBtn.className = 'btn btn-success w-100 py-2 fw-bold shadow-sm';
+  } else {
+    noticeBox.classList.remove('d-none');
+    submitBtn.innerHTML = '<i class="bi bi-qr-code me-1"></i> Place Pre-Order (Pay via Digital Wallet QR)';
+    submitBtn.className = 'btn btn-primary w-100 py-2 fw-bold shadow-sm';
+  }
+}
+</script>
+{% endblock %}

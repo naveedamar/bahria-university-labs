@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+  <div class="col-md-8">
+    <h2 class="fw-bold mb-1"><i class="bi bi-receipt text-primary me-2"></i>My Bahria Bites Orders</h2>
+    <p class="text-muted mb-0">Track the status of your live meal preparations and view your past pre-orders.</p>
+  </div>
+  <div class="col-md-4 text-md-end mt-3 mt-md-0">
+    <a href="{{ url_for('student_menu') }}" class="btn btn-outline-primary">
+      <i class="bi bi-plus-circle me-1"></i> Order More Food
+    </a>
+  </div>
+</div>
+
+{% if orders %}
+  <div class="row g-4">
+    {% for order in orders %}
+      <div class="col-12">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header py-3 d-flex flex-wrap align-items-center justify-content-between gap-2 border-bottom border-secondary border-opacity-25">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+              <span class="fs-5 fw-bold text-light">{{ order.order_number }}</span>
+              <span class="badge 
+                {% if order.status == 'Pending' %}badge-status-pending
+                {% elif order.status == 'Preparing' %}badge-status-preparing
+                {% elif order.status == 'Ready' %}badge-status-ready
+                {% else %}badge-status-completed{% endif %} px-3 py-2 text-uppercase fs-6">
+                {{ order.status }}
+              </span>
+              <span class="badge {% if order.payment_method == 'Cash' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} px-2 py-1 small">
+                <i class="bi {% if order.payment_method == 'Cash' %}bi-cash-coin{% else %}bi-qr-code{% endif %} me-1"></i>
+                {{ order.payment_method }}
+              </span>
+            </div>
+
+            <div class="text-muted small">
+              <i class="bi bi-calendar3 me-1"></i> Placed on {{ order.created_at.strftime('%b %d, %Y at %I:%M %p') }}
+            </div>
+          </div>
+
+          <div class="card-body p-4">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-7">
+                <h6 class="fw-bold text-uppercase text-muted small mb-2">Items Ordered</h6>
+                <ul class="list-group list-group-flush">
+                  {% for item in order.items %}
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center bg-transparent border-secondary border-opacity-25">
+                      <div>
+                        <strong class="text-light">{{ item.quantity }}x</strong> <span class="text-light">{{ item.menu_item.name }}</span>
+                        <span class="text-muted small">(@ Rs. {{ "%.2f"|format(item.price) }})</span>
+                      </div>
+                      <span class="fw-semibold text-light">Rs. {{ "%.2f"|format(item.subtotal) }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+              <div class="col-md-5 border-start-md ps-md-4">
+                <div class="p-3 bg-secondary bg-opacity-10 border border-secondary border-opacity-25 rounded">
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted"><i class="bi bi-clock-history me-1"></i> Pickup Slot:</span>
+                    <span class="fw-bold text-light">{{ order.pickup_time }}</span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted"><i class="bi bi-wallet2 me-1"></i> Payment Method:</span>
+                    <span class="badge {% if order.payment_method == 'Cash' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} fw-semibold">
+                      {{ order.payment_method }}{% if order.payment_method == 'Cash' %} (Pay at Pickup){% else %} (Pay via QR at Counter){% endif %}
+                    </span>
+                  </div>
+                  <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Total Amount:</span>
+                    <span class="h5 fw-bold text-primary mb-0">Rs. {{ "%.2f"|format(order.total) }}</span>
+                  </div>
+
+                  <div class="pt-2 border-top border-secondary border-opacity-25">
+                    {% if order.status == 'Pending' %}
+                      <div class="text-warning small d-flex align-items-center">
+                        <i class="bi bi-hourglass-split me-1 fs-5"></i>
+                        <span>Kitchen received order; preparation starting soon.</span>
+                      </div>
+                    {% elif order.status == 'Preparing' %}
+                      <div class="text-primary small d-flex align-items-center">
+                        <i class="bi bi-fire me-1 fs-5"></i>
+                        <span>Chef is preparing your meal in the kitchen.</span>
+                      </div>
+                    {% elif order.status == 'Ready' %}
+                      <div class="text-success small d-flex align-items-center fw-bold">
+                        <i class="bi bi-bell-fill me-1 fs-5"></i>
+                        <span>Ready for pickup! Collect at counter with #{{ order.order_number }}.</span>
+                      </div>
+                    {% else %}
+                      <div class="text-secondary small d-flex align-items-center">
+                        <i class="bi bi-check2-all me-1 fs-5"></i>
+                        <span>Order collected and completed. Thank you!</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Settlement Instruction & Dark-Theme QR Placeholder -->
+            {% if order.payment_method != 'Cash' %}
+              <div class="mt-3 p-3 rounded border border-info border-opacity-25 d-flex align-items-center gap-3" style="background-color: var(--bb-bg-elevated, #252525);">
+                <!-- Dark-Themed QR Graphic Placeholder -->
+                <div class="rounded d-flex flex-column align-items-center justify-content-center border border-secondary border-opacity-50 text-center flex-shrink-0" 
+                     style="width: 76px; height: 76px; background-color: #1a1a1a;">
+                  <i class="bi bi-qr-code fs-2 text-info mb-0"></i>
+                  <span style="font-size: 0.65rem; letter-spacing: 0.5px;" class="fw-bold text-light">COUNTER QR</span>
+                </div>
+
+                <!-- Instruction text -->
+                <div>
+                  <div class="fw-bold text-info small mb-1">
+                    💳 Payment Pending — Please scan the QR code at the cafeteria counter to complete payment via your digital wallet before or at pickup.
+                  </div>
+                  <div class="text-muted" style="font-size: 0.78rem;">
+                    Show your order number <strong class="text-light">#{{ order.order_number }}</strong> to the cafeteria cashier when scanning the counter terminal.
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="mt-3 p-2 px-3 rounded border border-secondary border-opacity-25 d-flex align-items-center gap-2 small text-muted" style="background-color: var(--bb-bg-elevated, #252525);">
+                <i class="bi bi-cash-coin text-warning fs-5"></i>
+                <span><strong>Cash Settlement:</strong> Please hand over <strong class="text-light">Rs. {{ "%.2f"|format(order.total) }}</strong> in cash at the counter upon collecting your meal.</span>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <!-- No Orders Yet -->
+  <div class="card border-0 shadow-sm text-center py-5">
+    <div class="card-body">
+      <div class="bg-secondary bg-opacity-25 text-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+        <i class="bi bi-journal-x fs-1"></i>
+      </div>
+      <h4 class="fw-bold text-light">No orders placed yet</h4>
+      <p class="text-muted mb-4">You haven't made any Bahria Bites pre-orders yet today.</p>
+      <a href="{{ url_for('student_menu') }}" class="btn btn-primary px-4 py-2">
+        <i class="bi bi-grid-fill me-1"></i> Explore Bahria Bites Menu
+      </a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

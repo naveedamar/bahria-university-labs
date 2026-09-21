@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: cafeteria-system
+    env: python
+    rootDir: software-engineering/cafeteria_system
+    buildCommand: pip install -r requirements.txt && python seed.py
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0

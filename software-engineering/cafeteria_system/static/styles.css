@@ -1,0 +1,254 @@
+/* Bahria Bites Pre-Order System - Dark Theme Stylesheet */
+:root {
+  --bs-font-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --bb-bg-main: #121212;
+  --bb-bg-card: #1e1e1e;
+  --bb-bg-elevated: #252525;
+  --bb-bg-input: #282828;
+  --bb-text-main: #e0e0e0;
+  --bb-text-muted: #9e9e9e;
+  --bb-border: rgba(255, 255, 255, 0.09);
+  --bb-border-focus: #3b82f6;
+  --card-border-radius: 12px;
+  --card-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+body {
+  font-family: var(--bs-font-sans-serif);
+  background-color: var(--bb-bg-main);
+  color: var(--bb-text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Base text color overrides for readability in dark mode */
+h1, h2, h3, h4, h5, h6 {
+  color: #f3f4f6;
+}
+
+p, span, label {
+  color: inherit;
+}
+
+.text-muted {
+  color: var(--bb-text-muted) !important;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #181818 !important;
+  border-bottom: 1px solid var(--bb-border);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #f3f4f6 !important;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #b0b3b8 !important;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Cards & Elevated Containers */
+.card {
+  border-radius: var(--card-border-radius);
+  border: 1px solid var(--bb-border) !important;
+  box-shadow: var(--card-shadow);
+  background-color: var(--bb-bg-card) !important;
+  color: var(--bb-text-main);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.card-header {
+  border-top-left-radius: var(--card-border-radius) !important;
+  border-top-right-radius: var(--card-border-radius) !important;
+  font-weight: 600;
+  background-color: var(--bb-bg-card) !important;
+  border-bottom: 1px solid var(--bb-border);
+  color: #f3f4f6;
+}
+
+.card-footer {
+  background-color: var(--bb-bg-card) !important;
+  border-top: 1px solid var(--bb-border);
+}
+
+/* Modals & Dropdowns */
+.modal-content {
+  background-color: var(--bb-bg-card) !important;
+  border: 1px solid var(--bb-border);
+  color: var(--bb-text-main);
+  border-radius: var(--card-border-radius);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--bb-border);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--bb-border);
+}
+
+.dropdown-menu {
+  background-color: var(--bb-bg-card);
+  border: 1px solid var(--bb-border);
+  color: var(--bb-text-main);
+  border-radius: 8px;
+}
+
+.dropdown-item {
+  color: var(--bb-text-main);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--bb-bg-elevated);
+  color: #ffffff;
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--bb-border);
+}
+
+/* Form Controls & Inputs */
+.form-control,
+.form-select {
+  background-color: var(--bb-bg-input) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f3f4f6 !important;
+  border-radius: 8px;
+}
+
+.form-control::placeholder {
+  color: #71717a !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: #2e2e2e !important;
+  border-color: var(--bb-border-focus) !important;
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.input-group-text {
+  background-color: var(--bb-bg-elevated) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #a1a1aa !important;
+}
+
+/* Tables */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--bb-text-main);
+  --bs-table-border-color: var(--bb-border);
+  color: var(--bb-text-main);
+}
+
+.table thead th {
+  background-color: var(--bb-bg-elevated) !important;
+  color: #f3f4f6 !important;
+  font-weight: 600;
+  border-bottom: 1px solid var(--bb-border);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.9rem 1rem;
+  vertical-align: middle;
+}
+
+/* Food Menu Items */
+.menu-card-img {
+  height: 190px;
+  object-fit: cover;
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
+  background-color: #1f2937;
+}
+
+.menu-card-img-placeholder {
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  color: #93c5fd;
+  font-size: 3rem;
+  border-top-left-radius: var(--card-border-radius);
+  border-top-right-radius: var(--card-border-radius);
+}
+
+.price-tag {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4ade80;
+}
+
+/* Order Status Badges - Vivid contrast on dark backgrounds */
+.badge-status-pending {
+  background-color: #ffc107 !important;
+  color: #121212 !important;
+  font-weight: 700;
+}
+
+.badge-status-preparing {
+  background-color: #0d6efd !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.badge-status-ready {
+  background-color: #198754 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+.badge-status-completed {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+/* Pill Category Filter */
+.category-pill {
+  border-radius: 50px;
+  padding: 6px 18px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Cart Badge */
+.badge-cart {
+  position: relative;
+  top: -1px;
+  font-size: 0.75rem;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  border-top: 1px solid var(--bb-border);
+  background-color: #181818;
+  color: var(--bb-text-muted);
+}

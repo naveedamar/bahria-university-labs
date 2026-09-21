@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Bahria Bites Menu{% endblock %}
+
+{% block content %}
+<!-- Header Hero -->
+<div class="row align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+  <div class="col-md-8">
+    <h2 class="fw-bold mb-1">Bahria Bites Daily Menu</h2>
+    <p class="text-muted mb-0">Pre-order your favorite meals, snacks, and beverages to skip the counter queue.</p>
+  </div>
+  <div class="col-md-4 text-md-end mt-3 mt-md-0">
+    <a href="{{ url_for('student_cart') }}" class="btn btn-primary px-3 shadow-sm">
+      <i class="bi bi-bag-check-fill me-1"></i> View Cart & Checkout
+      {% if cart_count > 0 %}
+        <span class="badge bg-warning text-dark ms-1">{{ cart_count }}</span>
+      {% endif %}
+    </a>
+  </div>
+</div>
+
+<!-- Category Filters -->
+<div class="d-flex flex-wrap gap-2 mb-4">
+  {% for cat in categories %}
+    <a href="{{ url_for('student_menu', category=cat) }}" 
+       class="category-pill btn {% if selected_category == cat %}btn-primary text-white shadow-sm{% else %}btn-outline-secondary text-light{% endif %}">
+      {{ cat }}
+    </a>
+  {% endfor %}
+</div>
+
+<!-- Menu Grid -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+  {% for item in items %}
+    <div class="col">
+      <div class="card h-100 card-hover border-0 shadow-sm position-relative">
+        
+        <!-- Category Badge -->
+        <span class="position-absolute top-0 end-0 m-3 badge px-2 py-1 fw-semibold
+          {% if item.category == 'Meals' %}bg-danger bg-opacity-75 text-light border border-danger border-opacity-50
+          {% elif item.category == 'Fast Food' %}bg-warning bg-opacity-75 text-dark border border-warning border-opacity-50
+          {% elif item.category == 'Sides' %}bg-info bg-opacity-75 text-dark border border-info border-opacity-50
+          {% elif item.category == 'Beverages' %}bg-primary bg-opacity-75 text-light border border-primary border-opacity-50
+          {% elif item.category == 'Desserts' %}bg-success bg-opacity-75 text-light border border-success border-opacity-50
+          {% else %}bg-secondary bg-opacity-75 text-light border border-secondary border-opacity-50{% endif %}">
+          {{ item.category }}
+        </span>
+
+        <!-- Image or Fallback -->
+        {% if item.image_url %}
+          <img src="{{ item.image_url }}" alt="{{ item.name }}" class="menu-card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="menu-card-img-placeholder" style="display: none;">
+            <i class="bi bi-egg-fried"></i>
+          </div>
+        {% else %}
+          <div class="menu-card-img-placeholder">
+            <i class="bi bi-egg-fried"></i>
+          </div>
+        {% endif %}
+
+        <div class="card-body d-flex flex-column p-4">
+          <h5 class="card-title fw-bold mb-2">{{ item.name }}</h5>
+          <p class="card-text text-muted small flex-grow-1 mb-3">{{ item.description }}</p>
+
+          <div class="d-flex align-items-center justify-content-between pt-3 border-top border-secondary border-opacity-25">
+            <div>
+              <span class="text-muted small d-block">Price</span>
+              <span class="price-tag">Rs. {{ "%.2f"|format(item.price) }}</span>
+            </div>
+
+            {% if item.available %}
+              <form method="POST" action="{{ url_for('student_cart_add', item_id=item.id) }}">
+                <button type="submit" class="btn btn-primary fw-semibold px-3">
+                  <i class="bi bi-plus-lg me-1"></i> Add to Cart
+                </button>
+              </form>
+            {% else %}
+              <button class="btn btn-secondary disabled px-3 opacity-50" disabled>
+                <i class="bi bi-slash-circle me-1"></i> Sold Out
+              </button>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% else %}
+    <div class="col-12 py-5 text-center text-muted">
+      <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+      <h4>No items found in this category</h4>
+      <p>Check back later or browse all food options.</p>
+      <a href="{{ url_for('student_menu') }}" class="btn btn-outline-secondary btn-sm">Show All Menu Items</a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
