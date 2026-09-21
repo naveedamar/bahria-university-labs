@@ -113,7 +113,7 @@ def seed_database():
                 description="Golden crispy hand-cut potato fries lightly salted and seasoned with zesty chaat masala, served with chili garlic dip.",
                 category="Sides",
                 price=120.00,
-                image_url="https://images.unsplash.com/photo-1576107232684-1279f3908594?w=600&auto=format&fit=crop&q=80",
+                image_url="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&auto=format&fit=crop&q=80",
                 available=True
             ),
             MenuItem(
@@ -163,7 +163,7 @@ def seed_database():
                 description="500ml purified bottled drinking water, sealed and served ice-cold.",
                 category="Beverages",
                 price=50.00,
-                image_url="https://images.unsplash.com/photo-1548839140-29a749e1bc4e?w=600&auto=format&fit=crop&q=80",
+                image_url="https://images.unsplash.com/photo-1523362628745-0c100150b504?w=600&auto=format&fit=crop&q=80",
                 available=True
             ),
 
