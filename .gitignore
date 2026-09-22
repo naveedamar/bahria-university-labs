@@ -46,3 +46,11 @@ venv*
 /datasets/.complete/
 /datasets/North America Restaurants.csv
 /datasets/ks-projects-201612.csv
+/datasets/2015.csv
+/datasets/2016.csv
+/datasets/2017.csv
+/datasets/2018.csv
+/datasets/2019.csv
+/datasets/netflix_titles.csv
+/datasets/StudentsPerformance.csv
+/datasets/Titanic-Dataset.csv
