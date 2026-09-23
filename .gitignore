@@ -54,3 +54,6 @@ venv*
 /datasets/netflix_titles.csv
 /datasets/StudentsPerformance.csv
 /datasets/Titanic-Dataset.csv
+/data-science/lab-3/student.csv
+/data-science/lab-3/cleaned_students.csv
+/datasets/healthcare_dataset.csv
