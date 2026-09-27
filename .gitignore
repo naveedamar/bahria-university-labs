@@ -57,3 +57,8 @@ venv*
 /data-science/lab-3/student.csv
 /data-science/lab-3/cleaned_students.csv
 /datasets/healthcare_dataset.csv
+/datasets/toyota.csv
+/datasets/Salary_Data.csv
+/datasets/Housing.csv
+/datasets/auto-mpg.csv
+/datasets/Advertising.csv
