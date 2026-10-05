@@ -62,3 +62,5 @@ venv*
 /datasets/Housing.csv
 /datasets/auto-mpg.csv
 /datasets/Advertising.csv
+/.idea/rSettings.xml
+/.idea/rGraphicsSettings.xml
