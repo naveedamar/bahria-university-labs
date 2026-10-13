@@ -64,3 +64,5 @@ venv*
 /datasets/Advertising.csv
 /.idea/rSettings.xml
 /.idea/rGraphicsSettings.xml
+/data-science/lab-6/exam_score_model.pkl
+/data-science/lab-6/exam_score_regression.png

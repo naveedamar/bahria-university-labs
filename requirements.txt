@@ -7,3 +7,5 @@ seaborn
 kagglehub
 fuzzywuzzy
 scikit-learn
+joblib
+streamlit
